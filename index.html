@@ -1,143 +1,312 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bharath Kumar Rajesh - Data Engineer & AI Specialist</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">BK</div>
+            <div class="loading-text">Loading Portfolio</div>
+            <div class="loading-bar">
+                <div class="loading-progress" id="loadingProgress"></div>
+            </div>
+            <div class="loading-percentage" id="loadingPercentage">0%</div>
+        </div>
+    </div>
+
+    <!-- Three.js Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Cursor Follower -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-outline" id="cursorOutline"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
     <!-- Navigation -->
-    <nav class="nav">
+    <nav class="nav" id="mainNav">
         <div class="nav-container">
-            <div class="nav-logo">BK</div>
-            <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#publications">Publications</a></li>
-                <li><a href="#contact">Contact</a></li>
+            <div class="nav-logo">
+                <span class="logo-text">BK</span>
+                <span class="logo-pulse"></span>
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#about" class="nav-link"><i class="fas fa-user"></i> About</a></li>
+                <li><a href="#experience" class="nav-link"><i class="fas fa-briefcase"></i> Experience</a></li>
+                <li><a href="#projects" class="nav-link"><i class="fas fa-code"></i> Projects</a></li>
+                <li><a href="#publications" class="nav-link"><i class="fas fa-book"></i> Publications</a></li>
+                <li><a href="#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
             </ul>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound">
+                    <i class="fas fa-volume-up"></i>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
         </div>
     </nav>
 
+    <!-- Floating Action Button -->
+    <div class="fab-container" id="fabContainer">
+        <button class="fab-button" id="fabButton">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-menu" id="fabMenu">
+            <button class="fab-item" data-action="top" title="Scroll to Top">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            <button class="fab-item" data-action="share" title="Share">
+                <i class="fas fa-share-alt"></i>
+            </button>
+            <button class="fab-item" data-action="print" title="Print">
+                <i class="fas fa-print"></i>
+            </button>
+            <button class="fab-item" data-action="download" title="Download Resume">
+                <i class="fas fa-download"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section id="home" class="hero">
+        <div class="hero-particles" id="heroParticles"></div>
         <div class="hero-content">
-            <div class="hero-name">Bharath Kumar Rajesh</div>
-            <h1 class="hero-title">// Data Engineer & AI Specialist</h1>
-            <p class="hero-subtitle">Passionate about building scalable data pipelines, implementing machine learning solutions, and driving innovation through artificial intelligence. Currently pursuing MS in Computer Science with a focus on Data Engineering & Analytics at Pace University.</p>
+            <div class="hero-name glitch" data-text="Bharath Kumar Rajesh">Bharath Kumar Rajesh</div>
+            <h1 class="hero-title typing-effect" id="typingText">// Data Engineer & AI Specialist</h1>
+            <p class="hero-subtitle fade-in-up">Passionate about building scalable data pipelines, implementing machine learning solutions, and driving innovation through artificial intelligence. Currently pursuing MS in Computer Science with a focus on Data Engineering & Analytics at Pace University.</p>
 
             <!-- Stats -->
             <div class="stats-container">
-                <div class="stat-item">
-                    <div class="stat-number">60%</div>
+                <div class="stat-item" data-count="60">
+                    <div class="stat-number">0%</div>
                     <div class="stat-label">efficiency boost</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-bar"></div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">50k+</div>
+                <div class="stat-item" data-count="50">
+                    <div class="stat-number">0k+</div>
                     <div class="stat-label">records processed</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-bar"></div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">93%</div>
+                <div class="stat-item" data-count="93">
+                    <div class="stat-number">0%</div>
                     <div class="stat-label">ml accuracy</div>
+                    <div class="stat-progress">
+                        <div class="stat-progress-bar"></div>
+                    </div>
                 </div>
             </div>
 
             <div class="hero-cta">
-                <a href="#contact" class="btn-primary">Get In Touch</a>
-                <a href="#projects" class="btn-secondary">View Projects</a>
+                <a href="#contact" class="btn-primary btn-animated">
+                    <span>Get In Touch</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#projects" class="btn-secondary btn-animated">
+                    <span>View Projects</span>
+                    <i class="fas fa-code"></i>
+                </a>
             </div>
-            <div class="terminal-text">ai_engineer.exe</div>
+            <div class="terminal-text" id="terminalText">ai_engineer.exe</div>
+
+            <div class="hero-scroll-indicator">
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+                <div class="arrow">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- Matrix Rain Effect Section -->
+    <div class="matrix-section">
+        <canvas id="matrix-canvas"></canvas>
+    </div>
 
     <!-- About Section -->
     <section id="about" class="about-section">
         <div class="container">
-            <h2 class="section-title">#About Me</h2>
+            <h2 class="section-title animate-title">#About Me</h2>
             <p class="about-intro">A passionate data engineer with expertise in building scalable data pipelines, machine learning systems, and AI-driven solutions.</p>
+
+            <!-- Interactive Code Block -->
+            <div class="code-block-container">
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                        <span class="code-filename">about_me.py</span>
+                    </div>
+                    <pre class="code-content" id="codeContent"><code class="language-python">class DataEngineer:
+    def __init__(self):
+        self.name = "Bharath Kumar Rajesh"
+        self.role = "AI & Data Specialist"
+        self.location = "New York, NY"
+        self.education = {
+            "masters": "MS Computer Science - Pace University",
+            "gpa": 3.78,
+            "focus": "Data Engineering & Analytics"
+        }
+
+    def get_skills(self):
+        return {
+            "data_engineering": ["Airflow", "Spark", "Kafka"],
+            "ml_ai": ["TensorFlow", "PyTorch", "Scikit-learn"],
+            "cloud": ["AWS", "Azure", "GCP"],
+            "languages": ["Python", "SQL", "Java", "C++"]
+        }</code></pre>
+                </div>
+            </div>
 
             <div class="education-container">
                 <h3 class="subsection-title">Education</h3>
 
-                <div class="education-card">
+                <div class="education-card card-3d">
+                    <div class="card-shine"></div>
                     <h4 class="degree-title">Master of Science in Computer Science</h4>
                     <p class="institution">Pace University, Seidenberg School | New York, NY</p>
                     <p class="education-meta">GPA: 3.78 | Expected: May 2026</p>
                     <p class="concentration">Concentration: Data Engineering & Analytics</p>
+                    <div class="education-badge">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
                 </div>
 
-                <div class="education-card">
+                <div class="education-card card-3d">
+                    <div class="card-shine"></div>
                     <h4 class="degree-title">Bachelor of Engineering in Computer Science</h4>
                     <p class="institution">Jyothy Institute of Technology | Bangalore, India</p>
                     <p class="education-meta">Graduated: May 2024</p>
+                    <div class="education-badge">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
                 </div>
             </div>
 
-            <!-- Technical Skills -->
+            <!-- Technical Skills with Animated Bars -->
             <div class="tech-skills-container">
-                <div class="skill-category">
+                <div class="skill-category card-3d">
                     <h4 class="skill-category-title">$ data pipeline tools</h4>
-                    <div class="skill-tags">
-                        <span>Apache Airflow</span>
-                        <span>Apache Spark</span>
-                        <span>PySpark</span>
-                        <span>Hadoop</span>
-                        <span>Databricks</span>
+                    <div class="skill-bars">
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Apache Airflow</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="95"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Apache Spark</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">PySpark</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Databricks</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="skill-category">
+                <div class="skill-category card-3d">
                     <h4 class="skill-category-title">$ cloud platforms</h4>
-                    <div class="skill-tags">
-                        <span>AWS</span>
-                        <span>Azure</span>
-                        <span>Google Cloud</span>
-                        <span>S3</span>
-                        <span>EC2</span>
-                        <span>Lambda</span>
+                    <div class="skill-bars">
+                        <div class="skill-bar-item">
+                            <span class="skill-name">AWS</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="92"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Azure</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Google Cloud</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="88"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h4 class="skill-category-title">$ programming</h4>
-                    <div class="skill-tags">
-                        <span>Python</span>
-                        <span>Java</span>
-                        <span>SQL</span>
-                        <span>C++</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
+                <div class="skill-category card-3d">
                     <h4 class="skill-category-title">$ ml & ai</h4>
-                    <div class="skill-tags">
-                        <span>TensorFlow</span>
-                        <span>PyTorch</span>
-                        <span>Scikit-learn</span>
-                        <span>Keras</span>
+                    <div class="skill-bars">
+                        <div class="skill-bar-item">
+                            <span class="skill-name">TensorFlow</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="90"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">PyTorch</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="88"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Scikit-learn</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="93"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="skill-category">
-                    <h4 class="skill-category-title">$ devops & infrastructure</h4>
-                    <div class="skill-tags">
-                        <span>Docker</span>
-                        <span>Kubernetes</span>
-                        <span>Terraform</span>
-                        <span>CI/CD</span>
-                    </div>
-                </div>
-
-                <div class="skill-category">
-                    <h4 class="skill-category-title">$ visualization</h4>
-                    <div class="skill-tags">
-                        <span>Power BI</span>
-                        <span>Tableau</span>
-                        <span>Matplotlib</span>
-                        <span>Seaborn</span>
+                <div class="skill-category card-3d">
+                    <h4 class="skill-category-title">$ programming</h4>
+                    <div class="skill-bars">
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Python</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="95"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">SQL</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="92"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar-item">
+                            <span class="skill-name">Java</span>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" data-width="85"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -147,70 +316,115 @@
     <!-- Experience Section -->
     <section id="experience" class="experience-section">
         <div class="container">
-            <h2 class="section-title">#Professional Experience</h2>
+            <h2 class="section-title animate-title">#Professional Experience</h2>
             <p class="section-subtitle">My journey through various roles in data engineering, AI, and software development.</p>
 
             <div class="timeline">
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3 class="job-title">AI & Data Engineering Graduate Assistant</h3>
-                        <span class="job-date">Mar 2025 – Present</span>
+                <div class="timeline-line"></div>
+
+                <div class="experience-item card-3d" data-index="0">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="job-title">AI & Data Engineering Graduate Assistant</h3>
+                            <span class="job-date">Mar 2025 – Present</span>
+                        </div>
+                        <p class="company">Pace University | New York, NY</p>
+                        <ul class="job-description">
+                            <li>Engineered automated data processing pipelines using Apache Airflow and Python, implementing ETL workflows and data validation, reducing research processing time by 60% and boosting efficiency</li>
+                            <li>Optimized administrative workflows by developing AI driven automation systems, integrating APIs, scheduling logic, & backend scripts, reducing manual processing time & increasing operational efficiency</li>
+                            <li>Developed DevOps solutions and infrastructure automation to streamline research workflows</li>
+                        </ul>
+                        <div class="experience-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Airflow</span>
+                            <span class="tag">AI</span>
+                            <span class="tag">DevOps</span>
+                        </div>
                     </div>
-                    <p class="company">Pace University | New York, NY</p>
-                    <ul class="job-description">
-                        <li>Engineered automated data processing pipelines using Apache Airflow and Python, implementing ETL workflows and data validation, reducing research processing time by 60% and boosting efficiency</li>
-                        <li>Optimized administrative workflows by developing AI driven automation systems, integrating APIs, scheduling logic, & backend scripts, reducing manual processing time & increasing operational efficiency</li>
-                        <li>Developed DevOps solutions and infrastructure automation to streamline research workflows</li>
-                    </ul>
                 </div>
 
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3 class="job-title">Quantitative Research Virtual Experience</h3>
-                        <span class="job-date">July 2025</span>
+                <div class="experience-item card-3d" data-index="1">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="job-title">Quantitative Research Virtual Experience</h3>
+                            <span class="job-date">July 2025</span>
+                        </div>
+                        <p class="company">JPMorgan Chase | Forage</p>
+                        <ul class="job-description">
+                            <li>Analyzed loan portfolio data to develop probability of default models using statistical techniques</li>
+                            <li>Applied dynamic programming algorithms to convert FICO scores into categorical variables for predictive modeling</li>
+                            <li>Demonstrated proficiency in credit risk analysis and customer segmentation methodologies</li>
+                        </ul>
+                        <div class="experience-tags">
+                            <span class="tag">Statistical Analysis</span>
+                            <span class="tag">Risk Modeling</span>
+                            <span class="tag">Python</span>
+                        </div>
                     </div>
-                    <p class="company">JPMorgan Chase | Forage</p>
-                    <ul class="job-description">
-                        <li>Analyzed loan portfolio data to develop probability of default models using statistical techniques</li>
-                        <li>Applied dynamic programming algorithms to convert FICO scores into categorical variables for predictive modeling</li>
-                        <li>Demonstrated proficiency in credit risk analysis and customer segmentation methodologies</li>
-                    </ul>
                 </div>
 
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3 class="job-title">Software Development Intern</h3>
-                        <span class="job-date">Sept 2023 – May 2024</span>
+                <div class="experience-item card-3d" data-index="2">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="job-title">Software Development Intern</h3>
+                            <span class="job-date">Sept 2023 – May 2024</span>
+                        </div>
+                        <p class="company">Let's Be the Change | Bangalore, India</p>
+                        <ul class="job-description">
+                            <li>Designed & deployed cross-platform data management system using Flutter & React, implementing role-based data access controls and ETL processes for 1,000+ active user records</li>
+                            <li>Engineered backend data infrastructure with Firebase real-time synchronization & REST APIs</li>
+                        </ul>
+                        <div class="experience-tags">
+                            <span class="tag">Flutter</span>
+                            <span class="tag">React</span>
+                            <span class="tag">Firebase</span>
+                            <span class="tag">REST API</span>
+                        </div>
                     </div>
-                    <p class="company">Let's Be the Change | Bangalore, India</p>
-                    <ul class="job-description">
-                        <li>Designed & deployed cross-platform data management system using Flutter & React, implementing role-based data access controls and ETL processes for 1,000+ active user records, boosting admin data processing efficiency</li>
-                        <li>Engineered backend data infrastructure with Firebase real-time synchronization & REST APIs, automating data workflows and scaling support capacity by 40% for community transportation applications</li>
-                    </ul>
                 </div>
 
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3 class="job-title">Data Engineering Intern</h3>
-                        <span class="job-date">Aug 2023 – Sept 2023</span>
+                <div class="experience-item card-3d" data-index="3">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="job-title">Data Engineering Intern</h3>
+                            <span class="job-date">Aug 2023 – Sept 2023</span>
+                        </div>
+                        <p class="company">Compsoft Technologies | Bangalore, India</p>
+                        <ul class="job-description">
+                            <li>Built end-to-end data processing pipeline using Python and cloud technologies, processing 50k+ social media records with 85% data accuracy</li>
+                            <li>Designed user-centric data visualization dashboard using Python visualization libraries</li>
+                        </ul>
+                        <div class="experience-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">ETL</span>
+                            <span class="tag">Cloud</span>
+                            <span class="tag">Visualization</span>
+                        </div>
                     </div>
-                    <p class="company">Compsoft Technologies | Bangalore, India</p>
-                    <ul class="job-description">
-                        <li>Built end-to-end data processing pipeline using Python and cloud technologies, processing 50k+ social media records with comprehensive ETL workflows and data optimization, achieving 85% data accuracy</li>
-                        <li>Designed user-centric data visualization dashboard using Python visualization libraries to process and display real-time data trends from filtered datasets, enabling stakeholders to interpret data patterns and insights for decision-making</li>
-                    </ul>
                 </div>
 
-                <div class="experience-item">
-                    <div class="experience-header">
-                        <h3 class="job-title">Software Engineering Intern</h3>
-                        <span class="job-date">Mar 2023 – Apr 2023</span>
+                <div class="experience-item card-3d" data-index="4">
+                    <div class="experience-dot"></div>
+                    <div class="experience-content">
+                        <div class="experience-header">
+                            <h3 class="job-title">Software Engineering Intern</h3>
+                            <span class="job-date">Mar 2023 – Apr 2023</span>
+                        </div>
+                        <p class="company">Alltramatic | New York, NY (Remote)</p>
+                        <ul class="job-description">
+                            <li>Streamlined satellite image workflows & automated client alert systems using Selenium & SMTP protocols</li>
+                            <li>Engineered Python scripts for automated data processing & workflow orchestration</li>
+                        </ul>
+                        <div class="experience-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Selenium</span>
+                            <span class="tag">Automation</span>
+                        </div>
                     </div>
-                    <p class="company">Alltramatic | New York, NY (Remote)</p>
-                    <ul class="job-description">
-                        <li>Streamlined satellite image workflows & automated client alert systems using Selenium & SMTP protocols, reducing manual intervention & boosting alert delivery speed</li>
-                        <li>Engineered Python scripts for automated data processing & workflow orchestration, enhancing platform reliability & geofencing-based critical event monitoring across client facing systems</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -219,12 +433,13 @@
     <!-- Projects Section -->
     <section id="projects" class="projects-section">
         <div class="container">
-            <h2 class="section-title">#Featured Projects</h2>
+            <h2 class="section-title animate-title">#Featured Projects</h2>
             <p class="section-subtitle">Showcasing my expertise in data engineering, machine learning, and software development.</p>
 
             <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-icon">🤖</div>
+                <div class="project-card card-3d tilt-effect">
+                    <div class="card-shine"></div>
+                    <div class="project-icon-large">🤖</div>
                     <h3 class="project-title">Customer Churn Prediction System</h3>
                     <p class="project-description">Implemented scalable data processing pipeline to predict customer patterns using automated ETL workflows, applying k-fold cross-validation for robust evaluation, enabling better customer retention strategies.</p>
                     <p class="project-highlight">Developed cloud-based MLOps pipeline with automated retraining and monitoring systems, maintaining 90%+ accuracy through continuous data quality validation.</p>
@@ -236,10 +451,15 @@
                         <span class="tech-tag">MLOps</span>
                         <span class="tech-tag">Python</span>
                     </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                        <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
+                    </div>
                 </div>
 
-                <div class="project-card">
-                    <div class="project-icon">🚌</div>
+                <div class="project-card card-3d tilt-effect">
+                    <div class="card-shine"></div>
+                    <div class="project-icon-large">🚌</div>
                     <h3 class="project-title">Transportation Analytics Data Pipeline</h3>
                     <p class="project-description">Implemented comprehensive data processing pipeline to analyze transit patterns using automated ETL workflows, applying cross-validation for robust evaluation and enabling predictive maintenance for transportation systems.</p>
                     <div class="project-tech">
@@ -250,6 +470,10 @@
                         <span class="tech-tag">Data Pipeline</span>
                         <span class="tech-tag">ETL</span>
                     </div>
+                    <div class="project-links">
+                        <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                        <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Demo</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -258,22 +482,38 @@
     <!-- Publications Section -->
     <section id="publications" class="publications-section">
         <div class="container">
-            <h2 class="section-title">#Research Publications</h2>
+            <h2 class="section-title animate-title">#Research Publications</h2>
             <p class="section-subtitle">Contributing to the scientific community through research in AI, machine learning, and computer vision.</p>
 
             <div class="publications-list">
-                <div class="publication-card">
+                <div class="publication-card card-3d">
+                    <div class="card-shine"></div>
+                    <div class="publication-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
                     <h3 class="publication-title">A Deep CNN-Based Approach for Identifying Medicinal and Edible Plants in the Western Ghats Region</h3>
                     <p class="publication-venue">Atlantis Highlights in Computer Science</p>
                     <p class="publication-date">December 2023</p>
                     <p class="publication-description">Fine-tuned CNN model on plant image datasets, achieving 93%+ accuracy in species classification with optimized training parameters to support breakthroughs in automated plant recognition research.</p>
+                    <div class="publication-stats">
+                        <span class="stat"><i class="fas fa-chart-line"></i> 93% Accuracy</span>
+                        <span class="stat"><i class="fas fa-microchip"></i> Deep Learning</span>
+                    </div>
                 </div>
 
-                <div class="publication-card">
+                <div class="publication-card card-3d">
+                    <div class="card-shine"></div>
+                    <div class="publication-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
                     <h3 class="publication-title">AI-Driven Driver Drowsiness Detection System</h3>
                     <p class="publication-venue">International Journal of All Research Education & Scientific Methods</p>
                     <p class="publication-date">November 2023</p>
                     <p class="publication-description">Engineered real-time data processing system for transportation safety monitoring using computer vision pipelines, achieving 90% detection accuracy through automated validation frameworks, supporting public transit safety initiatives.</p>
+                    <div class="publication-stats">
+                        <span class="stat"><i class="fas fa-chart-line"></i> 90% Accuracy</span>
+                        <span class="stat"><i class="fas fa-eye"></i> Computer Vision</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,30 +522,59 @@
     <!-- Contact Section -->
     <section id="contact" class="contact-section">
         <div class="container">
-            <h2 class="section-title-large">#Let's Build Something Amazing</h2>
+            <h2 class="section-title-large animate-title">#Let's Build Something Amazing</h2>
             <p class="contact-subtitle">Ready to collaborate on your next data engineering project or discuss opportunities? I'd love to hear from you.</p>
 
             <div class="contact-grid">
-                <div class="contact-card">
+                <div class="contact-card card-3d">
+                    <div class="card-shine"></div>
                     <div class="contact-icon">✉️</div>
                     <h4>Email Me</h4>
                     <p>Drop me a line and I'll get back to you within 24 hours</p>
-                    <a href="mailto:bharath.kr702@gmail.com" class="contact-link">bharath.kr702@gmail.com</a>
+                    <div class="email-copy-container">
+                        <span class="contact-link" id="emailText">bharath.kr702@gmail.com</span>
+                        <button class="copy-btn" id="copyEmailBtn" title="Copy email">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="contact-card">
+                <div class="contact-card card-3d">
+                    <div class="card-shine"></div>
                     <div class="contact-icon">📍</div>
                     <h4>Location</h4>
                     <p>Currently based in the heart of innovation</p>
                     <p class="contact-link">New York, NY</p>
+                    <div class="location-map">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
                 </div>
 
-                <div class="contact-card">
+                <div class="contact-card card-3d">
+                    <div class="card-shine"></div>
                     <div class="contact-icon">📄</div>
                     <h4>Resume</h4>
                     <p>Download my complete professional background</p>
-                    <a href="#" class="contact-link">View Resume</a>
+                    <button class="contact-link download-resume-btn">
+                        <i class="fas fa-download"></i> Download Resume
+                    </button>
                 </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="https://github.com/yourusername" class="social-link" target="_blank" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/in/yourprofile" class="social-link" target="_blank" title="LinkedIn">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://twitter.com/yourusername" class="social-link" target="_blank" title="Twitter">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="mailto:bharath.kr702@gmail.com" class="social-link" title="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
             </div>
 
             <div class="social-footer">
@@ -318,12 +587,28 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Bharath Kumar Rajesh. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#home">Back to Top</a>
+            <div class="footer-content">
+                <p>&copy; 2024 Bharath Kumar Rajesh. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#home">Back to Top</a>
+                </div>
+            </div>
+            <div class="footer-wave">
+                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M0,0 C300,100 500,0 600,50 C700,100 900,0 1200,50 L1200,120 L0,120 Z"></path>
+                </svg>
             </div>
         </div>
     </footer>
+
+    <!-- Particle Container -->
+    <div id="particles-js"></div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Success!</span>
+    </div>
 
     <script src="script.js"></script>
 </body>
