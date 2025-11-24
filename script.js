@@ -40,25 +40,47 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
 
-// Observe skill cards
-document.querySelectorAll('.skill-card').forEach((card, index) => {
+// Observe education cards
+document.querySelectorAll('.education-card').forEach((card, index) => {
     card.classList.add('animate-on-scroll');
     card.style.transitionDelay = `${index * 0.1}s`;
     observer.observe(card);
 });
 
-// Observe project showcases
-document.querySelectorAll('.project-showcase').forEach((project, index) => {
-    project.style.animationDelay = `${index * 0.2}s`;
+// Observe skill categories
+document.querySelectorAll('.skill-category').forEach((category, index) => {
+    category.classList.add('animate-on-scroll');
+    category.style.transitionDelay = `${index * 0.05}s`;
+    observer.observe(category);
 });
 
-// Observe experience cards
-document.querySelectorAll('.experience-card').forEach((card, index) => {
+// Observe experience items
+document.querySelectorAll('.experience-item').forEach((item, index) => {
+    item.classList.add('animate-on-scroll');
+    item.style.transitionDelay = `${index * 0.1}s`;
+    observer.observe(item);
+});
+
+// Observe project cards
+document.querySelectorAll('.project-card').forEach((card, index) => {
+    card.classList.add('animate-on-scroll');
+    card.style.transitionDelay = `${index * 0.15}s`;
+    observer.observe(card);
+});
+
+// Observe publication cards
+document.querySelectorAll('.publication-card').forEach((card, index) => {
+    card.classList.add('animate-on-scroll');
+    card.style.transitionDelay = `${index * 0.1}s`;
+    observer.observe(card);
+});
+
+// Observe contact cards
+document.querySelectorAll('.contact-card').forEach((card, index) => {
     card.classList.add('animate-on-scroll');
     card.style.transitionDelay = `${index * 0.1}s`;
     observer.observe(card);
@@ -70,7 +92,7 @@ window.addEventListener('scroll', () => {
     const hero = document.querySelector('.hero-content');
     if (hero && scrolled < window.innerHeight) {
         hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-        hero.style.opacity = 1 - (scrolled / window.innerHeight);
+        hero.style.opacity = 1 - (scrolled / (window.innerHeight * 1.2));
     }
 });
 
@@ -97,41 +119,68 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Mobile menu toggle (if needed in future)
-const createMobileMenu = () => {
-    const nav = document.querySelector('.nav-container');
-    const menuButton = document.createElement('button');
-    menuButton.classList.add('mobile-menu-toggle');
-    menuButton.innerHTML = '☰';
-    menuButton.style.display = 'none';
+// Animate stats on scroll
+const animateStats = () => {
+    const stats = document.querySelectorAll('.stat-number');
 
-    if (window.innerWidth <= 480) {
-        menuButton.style.display = 'block';
-    }
+    stats.forEach(stat => {
+        const target = stat.textContent;
+        const isPercentage = target.includes('%');
+        const isK = target.includes('k');
 
-    menuButton.addEventListener('click', () => {
-        const menu = document.querySelector('.nav-menu');
-        menu.classList.toggle('active');
+        let numericValue;
+        if (isPercentage) {
+            numericValue = parseInt(target);
+        } else if (isK) {
+            numericValue = parseInt(target) * 1000;
+        } else {
+            numericValue = parseInt(target);
+        }
+
+        if (!isNaN(numericValue)) {
+            let current = 0;
+            const increment = numericValue / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= numericValue) {
+                    current = numericValue;
+                    clearInterval(timer);
+                }
+
+                if (isPercentage) {
+                    stat.textContent = Math.floor(current) + '%';
+                } else if (isK) {
+                    stat.textContent = Math.floor(current / 1000) + 'k+';
+                } else {
+                    stat.textContent = Math.floor(current) + '%';
+                }
+            }, 30);
+        }
     });
 };
 
-// Initialize on load
-window.addEventListener('load', () => {
-    // Add smooth entrance animation to hero
-    const hero = document.querySelector('.hero-content');
-    hero.style.animation = 'fadeInUp 1s ease-out';
+// Trigger stats animation when they come into view
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateStats();
+            statsObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
 
-    // Log performance metrics (optional)
-    console.log('Portfolio loaded successfully');
-});
+const statsContainer = document.querySelector('.stats-container');
+if (statsContainer) {
+    statsObserver.observe(statsContainer);
+}
 
 // Add cursor effect for interactive elements
 const addCursorEffect = () => {
-    const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .skill-card, .experience-card');
+    const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .education-card, .project-card, .publication-card, .contact-card');
 
     buttons.forEach(button => {
         button.addEventListener('mouseenter', function() {
-            this.style.transition = 'transform 0.3s ease';
+            this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
         });
 
         button.addEventListener('mouseleave', function() {
@@ -140,27 +189,43 @@ const addCursorEffect = () => {
     });
 };
 
-addCursorEffect();
+// Terminal text animation
+const animateTerminalText = () => {
+    const terminal = document.querySelector('.terminal-text');
+    if (terminal) {
+        const text = terminal.textContent;
+        terminal.textContent = '';
+        let i = 0;
 
-// Lazy loading for project images (when real images are added)
-if ('IntersectionObserver' in window) {
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const img = entry.target;
-                if (img.dataset.src) {
-                    img.src = img.dataset.src;
-                    img.classList.add('loaded');
-                    imageObserver.unobserve(img);
-                }
+        const typeWriter = () => {
+            if (i < text.length) {
+                terminal.textContent += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
             }
-        });
-    });
+        };
 
-    document.querySelectorAll('img[data-src]').forEach(img => {
-        imageObserver.observe(img);
-    });
-}
+        setTimeout(typeWriter, 1000);
+    }
+};
+
+// Initialize on load
+window.addEventListener('load', () => {
+    // Add smooth entrance animation to hero
+    const hero = document.querySelector('.hero-content');
+    if (hero) {
+        hero.style.animation = 'fadeInUp 1s ease-out';
+    }
+
+    // Initialize cursor effects
+    addCursorEffect();
+
+    // Animate terminal text
+    animateTerminalText();
+
+    // Log performance metrics (optional)
+    console.log('Portfolio loaded successfully');
+});
 
 // Performance optimization: Debounce scroll events
 function debounce(func, wait) {
@@ -175,9 +240,52 @@ function debounce(func, wait) {
     };
 }
 
-// Apply debouncing to scroll-heavy operations
-const debouncedScroll = debounce(() => {
-    // Any heavy scroll operations can go here
-}, 10);
+// Mobile menu functionality (if needed in future)
+const createMobileMenu = () => {
+    if (window.innerWidth <= 480) {
+        const navContainer = document.querySelector('.nav-container');
+        const navMenu = document.querySelector('.nav-menu');
 
-window.addEventListener('scroll', debouncedScroll);
+        // Create hamburger menu button
+        if (!document.querySelector('.mobile-menu-toggle')) {
+            const menuButton = document.createElement('button');
+            menuButton.classList.add('mobile-menu-toggle');
+            menuButton.innerHTML = '☰';
+            menuButton.style.cssText = `
+                display: block;
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: var(--text-primary);
+            `;
+
+            menuButton.addEventListener('click', () => {
+                navMenu.classList.toggle('active');
+            });
+
+            navContainer.appendChild(menuButton);
+        }
+    }
+};
+
+// Smooth scroll to top
+const scrollToTop = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+};
+
+// Add scroll to top functionality to footer link
+const backToTopLink = document.querySelector('.footer-links a[href="#home"]');
+if (backToTopLink) {
+    backToTopLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        scrollToTop();
+    });
+}
+
+// Print greeting in console
+console.log('%c Welcome to Bharath Kumar Rajesh\'s Portfolio! ', 'background: #0071e3; color: white; font-size: 16px; padding: 10px;');
+console.log('%c Data Engineer & AI Specialist ', 'color: #0071e3; font-size: 14px;');
